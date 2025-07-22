@@ -3,7 +3,8 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 
-# --- 1. SERVICE IMPORTS ---
+
+# importing all the services
 try:
     from services.language_service import handle_language_pipeline
     from services.summary_generator import summarize_article
@@ -14,12 +15,18 @@ try:
 except ImportError:
     REAL_SERVICES_AVAILABLE = False
 
-# --- Initialize Session State ---
+
+
+# initializing the session state - for better experience during language switch
+
 if "analysis_complete" not in st.session_state:
     st.session_state.analysis_complete = False
     st.session_state.article_data = {}
 
-# --- 2. PAGE CONFIGURATION ---
+
+
+# setting up streamlit page
+
 st.set_page_config(
     page_title="Explainee — AI News Explainer",
     page_icon="📄",
@@ -27,20 +34,19 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# --- 3. HELPER FUNCTION FOR WELCOME SCREEN ---
-# Unchanged, hidden for brevity
-def display_welcome_screen():
-    st.markdown("<div class='welcome-container'>...</div>", unsafe_allow_html=True)
 
 
-# --- 3. CUSTOM CSS FOR PROFESSIONAL UI ---
+# this section contains the css of entire page
+
+
 st.markdown("""
 <style>
-    /* --- General Styles --- */
+    /* Global Styles */
+            
     #MainMenu, footer, header { visibility: hidden; }
     .block-container { padding: 2rem 3rem; color: #0F172A; }
 
-    /* --- Sidebar Styles --- */
+    /*  Sidebar/left-column Styles  */
     [data-testid="stSidebar"] {
         background-color: #0F172A;
         width: 380px !important;
@@ -50,19 +56,25 @@ st.markdown("""
     .sidebar-header .brand-title { color: #FFFFFF; font-size: 2.25rem; font-weight: 700; }
     .sidebar-header .brand-tagline { color: #E2E8F0; font-size: 1rem; margin-top: -0.5rem; }
     
-    /* --- NEW: Improved Text Input Styling --- */
+            
+    /* URL input field */
     .stTextInput > div > div > input {
         background-color: #1E293B;
         color: #FFFFFF; /* User-typed text */
         border: 1px solid #475569; /* Brighter default border */
         transition: border-color 0.2s, box-shadow 0.2s;
     }
-    /* NEW: Make placeholder text more visible */
+            
+
+    /* URL input field - placeholder */
+            
     .stTextInput > div > div > input::placeholder {
         color: #94A3B8;
         opacity: 1;
     }
-    /* NEW: Add a highlight when the input is clicked (focused) */
+            
+    /* highlight input box */
+            
     .stTextInput > div > div > input:focus {
         border-color: #4F8BF9;
         box-shadow: 0 0 0 2px rgba(79, 139, 249, 0.4);
@@ -72,7 +84,9 @@ st.markdown("""
 
     .stButton > button { width: 100%; background-color: #4F8BF9; color: white; border-radius: 0.5rem; height: 3rem; }
 
-    /* --- Main Content Styles --- */
+    /*  Main Content Styles  */
+            
+
     h1, h2, h3 { color: #1E293B; }
     [data-testid="stMetric"] {
         background-color: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 0.75rem;
@@ -101,7 +115,12 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
-# --- 4. HELPER FUNCTION FOR WELCOME SCREEN ---
+
+
+
+
+# function to display welcome screen
+
 def display_welcome_screen():
     """Displays the initial welcome screen before any analysis is done."""
     st.markdown("<div class='welcome-container'>", unsafe_allow_html=True)
@@ -132,7 +151,8 @@ def display_welcome_screen():
     st.markdown("</div>", unsafe_allow_html=True)
 
 
-# --- 4. SIDEBAR & FORM SUBMISSION LOGIC ---
+
+# sidebar html & logic
 with st.sidebar:
     st.markdown("""
         <div class='sidebar-header'>
@@ -147,7 +167,8 @@ with st.sidebar:
     st.markdown("---")
     language_toggle_placeholder = st.empty()
 
-# --- 5. CORE PROCESSING LOGIC ---
+
+# core logic handling
 if submitted and url:
     try:
         if not REAL_SERVICES_AVAILABLE:
@@ -219,7 +240,7 @@ if submitted and url:
         st.session_state.analysis_complete = False
         st.session_state.article_data = {}
 
-# --- 6. DISPLAY LOGIC ---
+# diplay logic
 if not st.session_state.analysis_complete:
     display_welcome_screen()
     st.stop()
@@ -247,7 +268,8 @@ else:
     content_to_show = data['original_content']
     display_lang = data['lang_name']
 
-# --- Display Results ---
+# Display Results
+
 st.header(data['title'])
 col1, col2, col3 = st.columns(3)
 col1.metric("Source", data['source'])
