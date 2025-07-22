@@ -15,4 +15,4 @@ Explainee is an intelligent news explainer web app designed to simplify complex 
 
 ## Architecture Diagram
 
-![](https://github.com/user-attachments/assets/058a9241-f2b8-48bb-a680-55a5028933f8)
+![](<img width="1604" height="3845" alt="Image" src="https://github.com/user-attachments/assets/058a9241-f2b8-48bb-a680-55a5028933f8" />)
